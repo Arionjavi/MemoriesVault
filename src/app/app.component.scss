@@ -1,0 +1,345 @@
+// Variables CSS para el tema
+:root {
+  // Tema claro (por defecto)
+  --background-color: #ffffff;
+  --text-color: #333333;
+  --header-bg: #f8f8f8;
+  --sidebar-bg: #f8f8f8;
+  --border-color: #e0e0e0;
+  --card-bg: #ffffff;
+  --slider-track: #ADADAD;
+  --slider-thumb: #ffffff;
+  --slider-progress: #0072E2;
+  --button-bg: rgba(0, 0, 0, 0.05);
+  --button-hover: rgba(0, 0, 0, 0.1);
+    --text-familiares: #555555;
+    --text-familiares2: #000000;
+}
+
+// Tema oscuro
+.dark-theme {
+  --background-color: #212121;
+  --text-color: #e0e0e0;
+  --header-bg: #2c2c2c;
+  --sidebar-bg: #2c2c2c;
+  --border-color: #444444;
+  --card-bg: #2c2c2c;
+  --slider-track: #555555;
+  --slider-thumb: #ffffff;
+  --slider-progress: #0072E2;
+  --button-bg: rgba(255, 255, 255, 0.1);
+  --button-hover: rgba(255, 255, 255, 0.2);
+  --text-familiares: #555555;
+  --text-familiares2: #ffffff;
+}
+
+// Aplicar tema al body
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.familiares{
+  color: var(--text-familiares) !important;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--background-color);
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: var(--header-bg);
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.3s ease;
+  
+  /* AQUÍ PUEDES MOVER LOS ELEMENTOS DEL HEADER */
+  /* Para mover elementos, cambia el order y flex de cada sección: */
+  
+  // Controles de audio izquierda (puedes cambiar order: 1 a order: 2, 3, etc.)
+  .audio-player-left {
+    order: 3;
+    display: flex;
+    align-items: center;
+    min-width: 150px;
+    margin-left: 14px;
+  }
+  
+  // Controles de audio centro (puedes mover con order)
+  .audio-player-center {
+    order: 4;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 600px;
+    margin-left: 396px;
+  }
+
+   .song-title {
+      font-size: 14px;
+      color: var(--text-color);
+      margin-bottom: 2px;
+      text-align: center;
+      font-weight: 500;
+      order: 4;
+      margin-left: 20px;
+    }
+  
+  // Logo (puedes mover con order)
+  .logo {
+    order: 0;
+    display: flex;
+    align-items: center;
+   
+    i {
+      margin-right: 8px;
+      color: var(--text-color);
+    }
+    
+    span {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text-color);
+    }
+  }
+  
+  // Toggle de tema (puedes mover con order)
+  .theme-toggle {
+    order: 5;
+    display: flex;
+    align-items: center;
+    margin: 0 15px; // Cambiar estos valores para mover izq/der
+    
+    .theme-icon {
+      margin-right: 8px;
+      color: var(--text-color);
+    }
+    
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+      
+      input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      
+      .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        border-radius: 24px;
+        transition: 0.4s;
+        
+        &:before {
+          position: absolute;
+          content: "";
+          height: 18px;
+          width: 18px;
+          left: 3px;
+          bottom: 3px;
+          background-color: white;
+          border-radius: 50%;
+          transition: 0.4s;
+        }
+      }
+      
+      input:checked + .toggle-slider {
+        background-color: #2196F3;
+      }
+      
+      input:checked + .toggle-slider:before {
+        transform: translateX(26px);
+      }
+    }
+  }
+  
+  // Controles derecha (puedes mover con order)
+  .header-controls {
+    order: 5;
+    margin-left: auto; // Cambiar a margin-right: auto; para mover izquierda
+    
+    i {
+      margin-left: 15px;
+      cursor: pointer;
+      color: var(--text-color);
+    }
+  }
+  
+  // Botones de control de audio
+  .volume-button, .control-button, .play-button {
+    background: var(--button-bg);
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    margin: 0 4px;
+    
+    &:hover {
+      background: var(--button-hover);
+      transform: scale(1.1);
+    }
+    
+    i {
+      font-size: 20px;
+    }
+  }
+  
+  .play-button {
+    padding: 10px;
+    
+    i {
+      font-size: 28px;
+    }
+  }
+  
+  // Contenedores de sliders
+  .volume-slider, .progress-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .volume-slider {
+    width: 80px;
+    margin: 0 10px;
+  }
+  
+  .progress-container {
+    flex: 1;
+    margin: 0 15px;
+    
+    .time-current, .time-total {
+      font-size: 12px;
+      color: var(--text-color);
+      width: 35px;
+      text-align: center;
+      margin: 0 8px;
+    }
+  }
+  
+  // SLIDERS CON RELLENO DINÁMICO
+  .slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+    margin-top: 1px !important;
+    
+    // Para Chrome/Safari
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      background: var(--slider-thumb);
+      border-radius: 50%;
+      cursor: pointer;
+      border: 3px solid var(--slider-progress);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      margin-top: -4.5px !important;
+    }
+    
+    // Para Firefox
+    &::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      background: var(--slider-thumb);
+      border-radius: 50%;
+      cursor: pointer;
+      border: 3px solid var(--slider-progress);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    // Track para Chrome
+    &::-webkit-slider-runnable-track {
+      height: 6px;
+      border-radius: 3px;
+    }
+  }
+  
+  // Slider específico para volumen CON RELLENO
+  .volume-control {
+    background: linear-gradient(to right, 
+      var(--slider-progress) 0%, 
+      var(--slider-progress) var(--volume-progress, 70%), 
+      var(--slider-track) var(--volume-progress, 70%), 
+      var(--slider-track) 100%);
+  }
+  
+  // Slider específico para progreso de canción CON RELLENO
+  .progress-bar {
+    background: linear-gradient(to right, 
+      var(--slider-progress) 0%, 
+      var(--slider-progress) var(--time-progress, 0%), 
+      var(--slider-track) var(--time-progress, 0%), 
+      var(--slider-track) 100%);
+  }
+}
+
+.app-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  
+  .sidebar {
+    width: 220px;
+    border-right: 1px solid var(--border-color);
+    overflow-y: auto;
+    background-color: var(--sidebar-bg);
+    transition: background-color 0.3s ease;
+  }
+  
+  .main-content {
+    flex: 1;
+    overflow-y: auto;
+    background-color: var(--background-color);
+    transition: background-color 0.3s ease;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .app-header {
+    flex-wrap: wrap;
+    
+    .audio-player-center {
+      order: 6;
+      width: 100%;
+      margin-top: 10px;
+    }
+  }
+  
+  .app-content {
+    flex-direction: column;
+    
+    .sidebar {
+      width: 100%;
+      height: auto;
+      max-height: 200px;
+      border-right: none;
+      border-bottom: 1px solid var(--border-color);
+    }
+  }
+}

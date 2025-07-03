@@ -1,0 +1,108 @@
+<div class="gallery-header">
+  <div class="gallery-title">Favoritos</div>
+
+  <div class="gallery-actions">
+    <!-- Botón de descarga siempre visible -->
+    <button 
+      class="download-button" 
+      [disabled]="selectedItems.length === 0 || downloadInProgress"
+      (click)="downloadSelected()">
+      <i class="material-icons">download</i>
+      <span *ngIf="selectedItems.length > 0">{{ selectedItems.length }}</span>
+      <span *ngIf="selectedItems.length === 0">Descargar</span>
+    </button>
+
+      <!-- Botón Seleccionar todo -->
+<!-- Botón Seleccionar todo -->
+    <button 
+      class="select-all-button"
+      [disabled]="favoriteItemsFiltered.length === 0"
+      (click)="selectAll()">
+      <i class="material-icons">
+        {{ selectedItems.length === favoriteItemsFiltered.length ? 'remove_done' : 'select_all' }}
+      </i>
+      <span>
+        {{ selectedItems.length === favoriteItemsFiltered.length ? 'Deseleccionar todo' : 'Seleccionar todo' }}
+      </span>
+    </button>
+
+
+    <!-- Filtro por año -->
+    <div class="year-filter">
+      <button class="year-button" (click)="toggleYearDropdown()">
+        <i class="material-icons">event</i>
+        <span>{{ selectedFilterYear || 'Todos' }}</span>
+        <i class="material-icons">{{ isYearDropdownOpen ? 'expand_less' : 'expand_more' }}</i>
+      </button>
+      <div class="year-dropdown" *ngIf="isYearDropdownOpen">
+        <div 
+          class="year-option" 
+          [class.active]="!selectedFilterYear"
+          (click)="filterByYear(null)">
+          Todos los años
+        </div>
+        <div 
+          *ngFor="let year of availableYears" 
+          class="year-option"
+          [class.active]="selectedFilterYear === year"
+          (click)="filterByYear(year)">
+          {{ year }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="zoom-control">
+    <span class="zoom-icon small">
+      <i class="material-icons">grid_view</i>
+    </span>
+    <input 
+      type="range" 
+      min="3" 
+      max="9" 
+      step="1" 
+      [(ngModel)]="zoomLevel"
+      (input)="onZoomChange($event)"
+      class="zoom-slider">
+    <span class="zoom-icon large">
+      <i class="material-icons">grid_3x3</i>
+    </span>
+  </div>
+</div>
+
+<!-- 🎯 CONTENEDOR CON CLASE VIEWER-ACTIVE -->
+<div class="gallery-container"
+     [class.viewer-active]="isViewerOpen">
+  <div *ngIf="favoriteItemsFiltered.length === 0" class="no-favorites">
+    <p>No tienes elementos favoritos guardados</p>
+  </div>
+  
+  <!-- 🎯 GRID CON DATA-ITEM-ID -->
+  <div *ngIf="favoriteItemsFiltered.length > 0" class="gallery-grid" [style.--items-per-row]="itemsPerRow">
+    <div *ngFor="let item of favoriteItemsFiltered" 
+         class="gallery-item" 
+         [attr.data-item-id]="item.id"
+         [id]="'year-' + getYear(item)">
+      <app-media-item 
+        [item]="item" 
+        [resolution]="getImageResolution()"
+        [isSelected]="isItemSelected(item)"
+        (toggleSelect)="onToggleSelect($event)"
+        (itemDoubleClick)="onItemDoubleClick(item)">
+      </app-media-item>
+    </div>
+  </div>
+  
+  <div class="loading-container" *ngIf="loading">
+    <div class="spinner"></div>
+  </div>
+</div>
+
+<!-- 🎯 VISOR CON INDEX CHANGED -->
+<app-image-viewer 
+  *ngIf="isViewerOpen"
+  [items]="favoriteItemsFiltered"
+  [currentIndex]="currentViewIndex"
+  (closeViewer)="closeViewer()"
+  (indexChanged)="onViewerIndexChanged($event)">
+</app-image-viewer>

@@ -1,0 +1,62 @@
+.scroll-to-top-btn {
+  position: fixed; // ← CAMBIAR A FIXED
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background-color: var(--slider-progress);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+
+  &.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  &:hover {
+    background-color: #005bb5;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  }
+
+  i {
+    font-size: 28px;
+  }
+}
+
+.scroll-to-top-btn.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+
+.sort-button img {
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.10));
+  transition: filter 0.2s, transform 0.2s;
+}
+.sort-button:active img {
+  transform: scale(0.95);
+}
+
+
+// Tema oscuro
+.dark-theme .scroll-to-top-btn {
+  background-color: var(--slider-progress);
+  
+  &:hover {
+    background-color: #1976D2;
+  }
+}

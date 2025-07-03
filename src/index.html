@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Recuerdos Familiares</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="icono.ico">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body class="">
+  <!-- OVERLAY DE CARGA GLOBAL -->
+  <div id="global-loading-overlay" class="global-loading-overlay">
+    <div class="overlay-content">
+      <!-- Spinner de 8 puntos sincronizado -->
+      <div class="dots-spinner">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="global-progress-bar"></div>
+      </div>
+      <div class="loading-text">Cargando recuerdos familiares...</div>
+    </div>
+  </div>
+
+  <!-- TU APLICACIÓN ANGULAR -->
+  <app-root></app-root>
+
+  <!-- SCRIPT MEJORADO PARA CONTROLAR EL OVERLAY -->
+  <script>
+    function startGlobalLoader() {
+      const overlay = document.getElementById('global-loading-overlay');
+      const progressBar = document.getElementById('global-progress-bar');
+      const duration = 8000; // 7 segundos
+      const interval = 50;
+      const steps = duration / interval;
+      let currentStep = 0;
+
+      const timer = setInterval(() => {
+        currentStep++;
+        const progress = Math.min((currentStep / steps) * 100, 100);
+        progressBar.style.width = progress + '%';
+        
+        if (currentStep >= steps) {
+          // REMOVER COMPLETAMENTE EL OVERLAY
+          overlay.style.opacity = '0';
+          overlay.style.pointerEvents = 'none';
+          
+          setTimeout(() => {
+            overlay.remove(); // ELIMINAR DEL DOM COMPLETAMENTE
+          }, 300);
+          clearInterval(timer);
+        }
+      }, interval);
+    }
+
+    // Iniciar el loader cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', startGlobalLoader);
+  </script>
+</body>
+</html>

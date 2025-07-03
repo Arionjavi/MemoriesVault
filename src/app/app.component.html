@@ -1,0 +1,83 @@
+<div class="app-container">
+  <header class="app-header">
+    <!-- Reproductor de Audio - Controles a la Izquierda -->
+    <div class="audio-player-left">
+      <button class="volume-button" (click)="toggleMute()">
+        <i class="material-icons">{{ isMuted ? 'volume_off' : 'volume_up' }}</i>
+      </button>
+      <div class="volume-slider">
+        <input 
+          type="range" 
+          min="0" 
+          max="100" 
+          [value]="volume * 100" 
+          (input)="updateVolume($event)"
+          class="slider volume-control">
+      </div>
+    </div>
+
+    <!-- Reproductor de Audio - Controles Centrales -->
+    <div class="audio-player-center">
+      <button class="control-button" (click)="previousTrack()">
+        <i class="material-icons">skip_previous</i>
+      </button>
+      <button class="play-button" (click)="togglePlay()">
+        <i class="material-icons">{{ isPlaying ? 'pause' : 'play_arrow' }}</i>
+      </button>
+      <button class="control-button" (click)="nextTrack()">
+        <i class="material-icons">skip_next</i>
+      </button>
+      <div class="progress-container">
+        <span class="time-current">{{ formatTime(currentTime) }}</span>
+        <input 
+          type="range" 
+          min="0" 
+          [max]="duration" 
+          [value]="currentTime" 
+          (input)="seekTo($event)"
+          class="slider progress-bar">
+        <span class="time-total">{{ formatTime(duration) }}</span>
+      </div>
+    </div>
+    <div class="song-title">{{ getCurrentSongName() }}</div>
+
+    <div class="logo">
+      <i class="material-icons">cloud</i>
+      <span class="familiares2">Recuerdos_</span><span class="familiares"> Familia</span>
+    </div>
+
+    <!-- Toggle de Tema -->
+    <div class="theme-toggle header-controls">
+      <i class="material-icons theme-icon">{{ isDarkMode ? 'dark_mode' : 'light_mode' }}</i>
+      <label class="switch">
+        <input type="checkbox" [checked]="isDarkMode" (change)="toggleTheme()">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+  </header>
+
+<div class="app-content">
+    <aside class="sidebar">
+<app-sidebar
+  (navigationChange)="onNavigate($event)"
+  (albumSelected)="onAlbumSelected($event)"
+  [selectedAlbumId]="selectedAlbumId"
+  [activeSection]="activeSection">
+</app-sidebar>
+    </aside>
+
+    <main class="main-content">
+      <app-gallery *ngIf="activeSection === 'fototeca'"></app-gallery>
+      <app-favorites *ngIf="activeSection === 'favoritos'"></app-favorites>
+      <app-albums 
+        *ngIf="activeSection === 'albumes'" 
+        [selectedAlbumId]="selectedAlbumId"
+        (albumSelectedFromGrid)="onAlbumSelectedFromGrid($event)">
+      </app-albums>
+    </main>
+  </div>
+  <app-scroll-to-top [scrollContainerSelector]="'.albums-container'"></app-scroll-to-top>
+  <!-- Audio element oculto -->
+  <audio #audioPlayer (timeupdate)="updateProgress()" (ended)="onTrackEnded()"></audio>
+</div>

@@ -1,0 +1,112 @@
+<div class="viewer-container">
+  <!-- Barra superior -->
+  <div class="viewer-toolbar">
+    <button class="back-button" (click)="close()">
+      <i class="material-icons">arrow_back</i>
+    </button>
+    <div class="spacer"></div>
+    <button class="favorite-button" [class.active]="isFavorite()" (click)="toggleFavorite($event)">
+      <i class="material-icons">{{ isFavorite() ? 'favorite' : 'favorite_border' }}</i>
+    </button>
+    <button class="download-button" (click)="downloadImage()">
+      <i class="material-icons">download</i>
+    </button>
+  </div>
+  
+  <!-- Contenedor principal de imagen con zoom -->
+  <div #imageContainer 
+       class="image-container no-select" 
+       [class.zoomable]="!isVideo && zoomLevel > 1"
+       (wheel)="onMouseWheel($event)"
+       (mousedown)="startDragImage($event)"
+       (mousemove)="onDragImage($event)"
+       (mouseup)="stopDragImage()"
+       (mouseleave)="stopDragImage()">
+    
+    <!-- Imagen con zoom y movimiento -->
+    <img *ngIf="!isVideo" 
+         #mainImage
+         [src]="currentItem.path" 
+         [alt]="currentItem.name"
+         [style.transform]="'scale(' + zoomLevel + ') translate(' + (currentX / zoomLevel) + 'px, ' + (currentY / zoomLevel) + 'px)'"
+         [style.cursor]="zoomLevel > 1 ? (isDraggingImage ? 'grabbing' : 'grab') : 'default'"
+         class="no-select">
+    
+    <!-- Video con controles nativos -->
+    <div *ngIf="isVideo" class="video-wrapper no-select">
+      <video #videoPlayer
+             class="main-video"
+             [class.horizontal]="isVideoHorizontal"
+             [class.vertical]="!isVideoHorizontal"
+             controls
+             preload="metadata"
+             (loadedmetadata)="onVideoLoaded()">
+        <source [src]="currentItem.path" [type]="getVideoMimeType()">
+        Tu navegador no soporta el tag de video.
+      </video>
+    </div>
+  </div>
+  
+  <!-- Botones de navegación -->
+  <button class="nav-button prev" (click)="navToPrev()" *ngIf="hasPrevious()">
+    <i class="material-icons">chevron_left</i>
+  </button>
+  <button class="nav-button next" (click)="navToNext()" *ngIf="hasNext()">
+    <i class="material-icons">chevron_right</i>
+  </button>
+  
+  <!-- 🎯 SLIDER CORREGIDO CON CLICK EVENTS MEJORADOS -->
+  <div class="thumbnail-slider no-select">
+    <div #thumbnailsContainer 
+         class="thumbnails-container no-select"
+         (wheel)="onThumbnailWheel($event)"
+         (scroll)="onThumbnailScroll()"
+         (mousedown)="startDragSlider($event)"
+         (mousemove)="onDragSlider($event)"
+         (mouseup)="stopDragSlider()"
+         (mouseleave)="stopDragSlider()">
+      
+      <div class="virtual-container" [style.width.px]="getTotalSliderWidth()">
+        <div 
+          *ngFor="let virtualItem of visibleThumbnails; trackBy: trackByIndex" 
+          class="thumbnail no-select" 
+          [class.active]="currentIndex === virtualItem.index"
+          [class.video]="virtualItem.item.type === 'video'"
+          [style.position]="'absolute'"
+          [style.left.px]="virtualItem.left"
+          [style.top]="'0'"
+          [attr.data-index]="virtualItem.index"
+          (click)="selectItem(virtualItem.index)"
+          (mousedown)="onThumbnailMouseDown($event)">
+          
+          <!-- 🎯 CONTENIDO DE MINIATURA CON LAZY LOADING -->
+          <div class="thumbnail-content">
+            <!-- 🎯 PLACEHOLDER MIENTRAS CARGA -->
+            <div class="thumbnail-placeholder" *ngIf="!virtualItem.isLoaded">
+              <div class="placeholder-shimmer"></div>
+            </div>
+            
+            <!-- 🎯 IMAGEN LAZY LOADED -->
+<!-- image-viewer.component.html -->
+<img class="thumbnail-image" 
+     [src]="virtualItem.src"
+     [class.loaded]="virtualItem.isLoaded">
+          </div>
+          
+          <!-- 🎯 OVERLAY CORREGIDO PARA VIDEOS CON PROPAGACIÓN -->
+          <div class="video-overlay no-select" 
+               *ngIf="virtualItem.item.type === 'video'"
+               (click)="onVideoOverlayClick($event, virtualItem.index)"
+               (mousedown)="onVideoOverlayMouseDown($event)">
+            <div class="play-icon">
+              <i class="material-icons">play_arrow</i>
+            </div>
+            <div class="video-duration" *ngIf="virtualItem.item.duration">
+              {{ virtualItem.item.duration }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

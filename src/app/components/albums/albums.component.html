@@ -1,0 +1,130 @@
+<div class="albums-container">
+  <!-- Header similar a galería -->
+  <div class="albums-header">
+    <div class="gallery-title">Álbumes</div>
+    
+    <!-- Botones de acción (sólo en vista de álbum) -->
+    <div class="gallery-actions" *ngIf="selectedAlbum">
+      <!-- Botón de descarga -->
+      <button 
+        class="download-button" 
+        [disabled]="selectedItems.length === 0 || downloadInProgress"
+        (click)="downloadSelected()">
+        <i class="material-icons">download</i>
+        <span *ngIf="selectedItems.length > 0">{{ selectedItems.length }}</span>
+        <span *ngIf="selectedItems.length === 0">Descargar</span>
+      </button>
+
+      <!-- Botón Seleccionar todo -->
+      <button 
+        class="select-all-button"
+        [disabled]="selectedAlbumPhotos.length === 0"
+        (click)="selectAll()">
+        <i class="material-icons">
+          {{ selectedItems.length === selectedAlbumPhotos.length ? 'remove_done' : 'select_all' }}
+        </i>
+        <span>
+          {{ selectedItems.length === selectedAlbumPhotos.length ? 'Deseleccionar todo' : 'Seleccionar todo' }}
+        </span>
+      </button>
+    </div>
+    
+    <!-- Control de zoom (solo en vista de álbum) -->
+    <div class="zoom-control" *ngIf="selectedAlbum">
+      <span class="zoom-icon small">
+        <i class="material-icons">grid_view</i>
+      </span>
+      <input 
+        type="range" 
+        min="3" 
+        max="9" 
+        step="1" 
+        [(ngModel)]="zoomLevel"
+        (input)="onZoomChange($event)"
+        class="zoom-slider">
+      <span class="zoom-icon large">
+        <i class="material-icons">grid_3x3</i>
+      </span>
+    </div>
+  </div>
+
+  <!-- Lista de álbumes cuando ninguno está seleccionado -->
+  <div *ngIf="!selectedAlbum" class="albums-grid">
+    <div *ngFor="let album of albums" class="album-card" (click)="selectAlbum(album)">
+      <div class="album-cover">
+        <!-- Grid de 4 SOLO IMÁGENES -->
+        <div class="photos-grid">
+          <div 
+            *ngFor="let photo of album.coverPhotos; let i = index" 
+            class="photo-slot"
+            [class.placeholder]="!photo">
+            <img 
+              *ngIf="photo" 
+              [src]="photo.path" 
+              [alt]="photo.name"
+              loading="lazy">
+            <div *ngIf="!photo" class="empty-slot">
+              <i class="material-icons">photo</i>
+            </div>
+          </div>
+        </div>
+        <div class="album-overlay">
+          <div class="photo-count">{{ album.photoCount }} elementos</div>
+        </div>
+      </div>
+      <div class="album-info">
+        <h3>{{ album.name }}</h3>
+        <span *ngIf="album.year" class="year-tag">{{ album.year }}</span>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Vista de un álbum cuando está seleccionado -->
+  <div *ngIf="selectedAlbum" class="album-view">
+    <div class="album-nav">
+      <button class="back-button" (click)="goBackToAlbums()">
+        <i class="material-icons">arrow_back</i>
+        <span>Álbumes</span>
+      </button>
+      <h3>{{ selectedAlbum.name }}</h3>
+    </div>
+    
+    <!-- Galería del álbum seleccionado -->
+    <div *ngIf="selectedAlbumPhotos.length > 0" 
+         class="album-gallery"
+         [class.viewer-active]="isViewerOpen">
+      <div class="album-gallery-grid" [style.--items-per-row]="itemsPerRow">
+        <div *ngFor="let photo of selectedAlbumPhotos" 
+             class="album-photo"
+             [attr.data-item-id]="photo.id">
+          <app-media-item 
+            [item]="photo" 
+            [resolution]="getImageResolution()"
+            [isSelected]="isItemSelected(photo)"
+            (toggleSelect)="onToggleSelect($event)"
+            (itemDoubleClick)="onItemDoubleClick(photo)">
+          </app-media-item>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="selectedAlbumPhotos.length === 0" class="empty-state">
+      <p>Este álbum no contiene elementos</p>
+    </div>
+    
+    <div *ngIf="loadingAlbumPhotos" class="loading-container">
+      <div class="spinner"></div>
+    </div>
+  </div>
+  
+  <!-- Visor de imágenes -->
+  <app-image-viewer 
+    *ngIf="isViewerOpen"
+    [items]="selectedAlbumPhotos"
+    [currentIndex]="currentViewIndex"
+    (closeViewer)="closeViewer()"
+    (indexChanged)="onViewerIndexChanged($event)">
+  </app-image-viewer>
+  
+  <app-scroll-to-top *ngIf="selectedAlbum"></app-scroll-to-top>
+</div>

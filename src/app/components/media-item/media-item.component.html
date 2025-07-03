@@ -1,0 +1,59 @@
+<div class="media-container" 
+     [ngClass]="{'video-item': isVideo, 'selected': isSelected}"
+     (click)="onItemClick($event)"
+     (dblclick)="onDoubleClick($event)">
+  
+  <!-- Imagen normal -->
+  <img *ngIf="!isVideo" 
+       [src]="getImagePath()" 
+       [alt]="item.name" 
+       loading="lazy"
+       class="media-content">
+  
+  <!-- Video con thumbnail mejorado -->
+  <div *ngIf="isVideo" class="video-preview">
+    <!-- Si tiene thumbnail, mostrarlo -->
+    <img *ngIf="item.thumbnail" 
+         [src]="item.thumbnail" 
+         [alt]="item.name"
+         class="video-thumbnail"
+         loading="lazy">
+    
+    <!-- Si no tiene thumbnail, usar video con poster -->
+    <video *ngIf="!item.thumbnail"
+           #videoElement
+           [src]="item.path"
+           [poster]="generatedThumbnail || ''"
+           preload="metadata"
+           muted
+           class="video-fallback"
+           (loadedmetadata)="generateThumbnail(videoElement)">
+    </video>
+    
+    <!-- Fallback visual si no hay thumbnail ni video carga -->
+    <div *ngIf="!item.thumbnail && !videoLoaded" class="video-placeholder">
+      <i class="material-icons">videocam</i>
+      <span>{{ item.name }}</span>
+    </div>
+    
+    <!-- Overlay de play -->
+    <div class="video-overlay">
+      <div class="play-button">
+        <i class="material-icons">play_arrow</i>
+      </div>
+      <div class="video-duration" *ngIf="item.duration">
+        {{ item.duration }}
+      </div>
+    </div>
+  </div>
+  
+  <!-- Botón de favoritos -->
+  <div class="favorite-button" (click)="toggleFavorite($event)">
+    <i class="material-icons">{{ isFavorite ? 'favorite' : 'favorite_border' }}</i>
+  </div>
+  
+  <!-- Indicador de selección -->
+  <div class="selection-indicator" *ngIf="isSelected">
+    <i class="material-icons">check_circle</i>
+  </div>
+</div>

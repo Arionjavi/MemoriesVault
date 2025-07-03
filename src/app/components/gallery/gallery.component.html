@@ -1,0 +1,112 @@
+<div class="gallery-header">
+  <!-- Título fijo -->
+  <div class="gallery-title">Fototeca</div>
+  
+  <!-- Botones de acción fijos -->
+  <div class="gallery-actions">
+    <!-- Botón de descarga siempre visible -->
+    <button 
+      class="download-button" 
+      [disabled]="selectedItems.length === 0 || downloadInProgress"
+      (click)="downloadSelected()">
+      <i class="material-icons">download</i>
+      <span *ngIf="selectedItems.length > 0">{{ selectedItems.length }}</span>
+      <span *ngIf="selectedItems.length === 0">Descargar</span>
+    </button>
+     <!-- Botón Seleccionar todo  -->
+    <button 
+      class="select-all-button"
+      [disabled]="mediaItems.length === 0"
+      (click)="selectAll()">
+      <i class="material-icons">
+        {{ selectedItems.length === mediaItems.length ? 'remove_done' : 'select_all' }}
+      </i>
+      <span>
+        {{ selectedItems.length === mediaItems.length ? 'Deseleccionar todo' : 'Seleccionar todo' }}
+      </span>
+    </button>
+    
+    
+    <!-- Filtro por año -->
+    <div class="year-filter">
+      <button class="year-button" (click)="toggleYearDropdown()">
+        <i class="material-icons">event</i>
+        <span>{{ selectedFilterYear || 'Todos' }}</span>
+        <i class="material-icons">{{ isYearDropdownOpen ? 'expand_less' : 'expand_more' }}</i>
+      </button>
+      
+      <div class="year-dropdown" *ngIf="isYearDropdownOpen">
+        <div 
+          class="year-option" 
+          [class.active]="!selectedFilterYear"
+          (click)="filterByYear(null)">
+          Todos los años
+        </div>
+        <div 
+          *ngFor="let year of availableYears" 
+          class="year-option"
+          [class.active]="selectedFilterYear === year"
+          (click)="filterByYear(year)">
+          {{ year }}
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Control de zoom -->
+  <div class="zoom-control">
+    <span class="zoom-icon small">
+      <i class="material-icons">grid_view</i>
+    </span>
+    <input 
+      type="range" 
+      min="3" 
+      max="9" 
+      step="1" 
+      [(ngModel)]="zoomLevel"
+      (input)="onZoomChange($event)"
+      class="zoom-slider">
+    <span class="zoom-icon large">
+      <i class="material-icons">grid_3x3</i>
+    </span>
+  </div>
+</div>
+
+<!-- 🎯 CONTENEDOR DE GALERÍA CON ID ÚNICO -->
+<div class="gallery-container"
+     [class.viewer-active]="isViewerOpen"
+     infinite-scroll 
+     [infiniteScrollDistance]="2"
+     [infiniteScrollThrottle]="50"
+     (scrolled)="onScroll()">
+  
+  <div *ngFor="let group of yearGroups" class="year-group" [id]="'year-' + group.year">
+    <div class="year-header">{{ group.year }}</div>
+    <div class="gallery-grid" [style.--items-per-row]="itemsPerRow">
+      <div *ngFor="let item of group.items" 
+           class="gallery-item"
+           [attr.data-item-id]="item.id">
+        <app-media-item 
+          [item]="item" 
+          [resolution]="getImageResolution()"
+          [isSelected]="isItemSelected(item)"
+          (toggleSelect)="onToggleSelect($event)"
+          (itemDoubleClick)="onItemDoubleClick(item)">
+        </app-media-item>
+      </div>
+    </div>
+  </div>
+  
+  <div class="loading-container" *ngIf="loading">
+    <div class="spinner"></div>
+  </div>
+</div>
+
+<!-- 🎯 VISUALIZADOR DE IMÁGENES -->
+<app-image-viewer 
+  *ngIf="isViewerOpen"
+  [items]="mediaItems"
+  [currentIndex]="currentViewIndex"
+  (closeViewer)="closeViewer()"
+  (indexChanged)="onViewerIndexChanged($event)">
+</app-image-viewer>

@@ -1,0 +1,306 @@
+.gallery-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--header-bg);
+  color: var(--text-color);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  gap: 24px;
+
+  .gallery-title {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text-color);
+    flex-shrink: 0;
+    margin-right: 24px;
+  }
+
+  .select-all-button {
+  display: flex;
+  align-items: center;
+  background-color: var(--button-bg);
+  color: var(--text-color);
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  min-width: 100px;
+  justify-content: center;
+  margin-left: 4px;
+
+  &:hover:not(:disabled) {
+    background-color: var(--button-hover);
+    color: var(--slider-progress);
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  i {
+    font-size: 18px;
+    margin-right: 8px;
+  }
+}
+
+
+  .gallery-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-right: 12px;
+
+    .download-button {
+      display: flex;
+      align-items: center;
+      background-color: var(--slider-progress);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+      min-width: 100px;
+      justify-content: center;
+
+      &:hover:not(:disabled) {
+        opacity: 0.9;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      }
+
+      &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+
+      i {
+        font-size: 18px;
+        margin-right: 8px;
+      }
+    }
+
+    .year-filter {
+      position: relative;
+
+      .year-button {
+        display: flex;
+        align-items: center;
+        background-color: var(--button-bg);
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        padding: 8px 12px;
+        cursor: pointer;
+        font-size: 14px;
+        min-width: 120px;
+        transition: all 0.2s;
+
+        &:hover {
+          background-color: var(--button-hover);
+        }
+
+        i:first-child {
+          margin-right: 8px;
+          font-size: 18px;
+        }
+
+        span {
+          flex: 1;
+          text-align: left;
+        }
+
+        i:last-child {
+          margin-left: 8px;
+          font-size: 18px;
+        }
+      }
+
+      .year-dropdown {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
+        background-color: var(--yeardropdown-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 100;
+        max-height: 200px;
+        overflow-y: auto;
+        max-width: 185px;
+        width: 185px;
+
+        .year-option {
+          padding: 10px 12px;
+          cursor: pointer;
+          transition: background-color 0.2s;
+          color: var(--text-color);
+
+          &:hover {
+            background-color: var(--button-bg);
+          }
+
+          &.active {
+            background-color: var(--slider-progress);
+            color: white;
+          }
+        }
+      }
+    }
+  }
+
+  .zoom-control {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+
+    .zoom-icon {
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+
+      &.small {
+        font-size: 18px;
+      }
+
+      &.large {
+        font-size: 24px;
+      }
+    }
+
+    .zoom-slider {
+      margin: 0 10px;
+      width: 120px;
+      height: 4px;
+      cursor: pointer;
+      -webkit-appearance: none;
+      background: var(--slider-track);
+      border-radius: 2px;
+
+      &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 16px;
+        width: 16px;
+        border-radius: 50%;
+        background: var(--slider-thumb);
+        border: 3px solid var(--slider-progress);
+        cursor: pointer;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      }
+    }
+  }
+}
+
+// 🎯 CONTENEDOR OPTIMIZADO CON COMPORTAMIENTO VIEWER-ACTIVE
+.gallery-container {
+  position: relative;
+  height: calc(100vh - 130px);
+  width: 100%;
+  overflow-y: auto;
+  background-color: var(--background-color);
+  transition: background-color 0.3s ease;
+  
+  // 🎯 SCROLL SUAVE MEJORADO
+  scroll-behavior: smooth;
+  overscroll-behavior: contain;
+  
+  // 🎯 CUANDO VISOR ESTÁ ACTIVO
+  &.viewer-active {
+    overflow: hidden !important;
+    
+    .gallery-grid {
+      visibility: hidden;
+    }
+    
+    .no-favorites {
+      visibility: hidden;
+    }
+    
+    .loading-container {
+      visibility: hidden;
+    }
+    
+    // 🎯 OVERLAY DE FONDO
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--background-color);
+      z-index: 1;
+    }
+  }
+}
+
+.no-favorites {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  color: #888;
+  font-size: 18px;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--items-per-row), 1fr);
+  grid-gap: 4px;
+  padding: 8px;
+}
+
+.gallery-item {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+
+  .spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(0, 112, 201, 0.1);
+    border-top: 3px solid #0070c9;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .gallery-header {
+    flex-wrap: wrap;
+    gap: 10px;
+
+    .gallery-actions {
+      order: 3;
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .zoom-control .zoom-slider {
+    width: 80px;
+  }
+}
