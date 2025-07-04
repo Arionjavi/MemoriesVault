@@ -15,6 +15,14 @@ npm start
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
+## Vista de la galería
+
+![Cargando](src/assets/info/cargando.png)
+
+## Selección de favoritos
+
+![Galería principal](src/assets/info/fototeca.png)
+
 ## Instalación y configuración
 
 1. **Instala las dependencias**  
@@ -42,6 +50,7 @@ src/assets/Albumes/
 - Cada año es una carpeta.
 - Dentro de cada año, crea carpetas para tus colecciones.
 - Añade dentro tus fotos y videos.
+- Borre las carpetas de años que no necesites (ya que son de prueba)
 
 3. **Genera el archivo JSON de contenido**  
 Ejecuta:
