@@ -102,8 +102,8 @@ El archivo `src/assets/albums.json` tendrá un formato como este:
 
 - Usa nombres de carpetas sin espacios y sin caracteres especiales (mejor `CRUCERO_2024`).
 - Los tipos de archivo soportados son:  
-  Imágenes: `.jpg`, `.png`, `.webp`  
-  Videos: `.mp4`, `.webm`
+  Imágenes: `.jpg`, `.png`, `.webp`, `.jpeg`, `.svg`, `.gif`,     
+  Videos: `.mp4`, `.webm`, `.mov`, `.avi`, `.mkv`,
 - Recuerda ejecutar `npm run generate-json` cada vez que cambies algo en tus álbumes.
 
 ---
