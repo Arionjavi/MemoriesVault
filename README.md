@@ -15,11 +15,11 @@ npm start
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-## Vista de la galería
+## Pantalla previa para cargar la galeria
 
 ![Cargando](src/assets/info/cargando.png)
 
-## Selección de favoritos
+## Vista de la galería
 
 ![Galería principal](src/assets/info/fototeca.png)
 
